@@ -35,7 +35,7 @@ def div_of_GF(a, b, p):
     return mul_of_GF(a, b_inv, p)
 
 
-def find_ord_GF(q, p):
+def find_ord_val_GF(q, p):
     if p == 1 or p < q or p % q == 0:
         return -1
 
@@ -63,4 +63,4 @@ def task_find_ord():
         print('Неверное число!')
 
     print('Порядок числа q конечного поля F(p) равен:', end=' ')
-    print(find_ord_GF(q, p))
+    print(find_ord_val_GF(q, p))
