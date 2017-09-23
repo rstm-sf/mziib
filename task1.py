@@ -7,7 +7,7 @@ def mul_of_GF(a, b, p):
 
 
 def sub_of_GF(a, b, p):
-    return add_of_GF(a, -b, p)
+    return (a - b) % p
 
 
 def xgcd(a, b):
