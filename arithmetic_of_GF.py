@@ -11,8 +11,7 @@ def sub_of_GF(a, b, p):
 
 
 def xgcd(a, b):
-    '''
-    Iterative Extended Euclidean algorithm
+    '''Iterative Extended Euclidean algorithm
     '''
     x0, x1, y0, y1 = 1, 0, 0, 1
 
@@ -36,6 +35,8 @@ def div_of_GF(a, b, p):
 
 
 def find_ord_val_GF(q, p):
+    if q == 1:
+        return 1
     if p == 1 or p < q or p % q == 0:
         return -1
 
