@@ -161,7 +161,6 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(
             self.lineEdit.sizePolicy().hasHeightForWidth())
         self.lineEdit.setSizePolicy(sizePolicy)
-        self.lineEdit.setInputMask("9")
         self.lineEdit.setReadOnly(False)
         self.lineEdit.setObjectName("lineEdit")
         self.lineEdit_2 = QtWidgets.QLineEdit(self.groupBox_3)
@@ -174,7 +173,6 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(
             self.lineEdit_2.sizePolicy().hasHeightForWidth())
         self.lineEdit_2.setSizePolicy(sizePolicy)
-        self.lineEdit_2.setInputMask("9")
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.lineEdit_3 = QtWidgets.QLineEdit(self.groupBox_3)
         self.lineEdit_3.setGeometry(QtCore.QRect(10, 210, 201, 30))
@@ -186,7 +184,6 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(
             self.lineEdit_3.sizePolicy().hasHeightForWidth())
         self.lineEdit_3.setSizePolicy(sizePolicy)
-        self.lineEdit_3.setInputMask("9")
         self.lineEdit_3.setObjectName("lineEdit_3")
         self.pushButton = QtWidgets.QPushButton(self.groupBox_3)
         self.pushButton.setGeometry(QtCore.QRect(10, 300, 201, 41))

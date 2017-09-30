@@ -12,21 +12,19 @@ class Form(QMainWindow, gui.Ui_MainWindow):
         self.setupUi(self)
         self.pushButton.clicked.connect(self.button_calculated)
         self.pushButton_2.clicked.connect(self.button_cleared)
-        self.a, self.b, self.p = 2, 1, 3
-        self.abp = self.a, self.b, self.p
-        self.lineEdit.setText(str(self.p))
-        self.lineEdit_2.setText(str(self.a))
-        self.lineEdit_3.setText(str(self.b))
+        a, b, p = 2, 1, 3
+        self.lineEdit.setText(str(p))
+        self.lineEdit_2.setText(str(a))
+        self.lineEdit_3.setText(str(b))
 
     def button_calculated(self):
-        self.p = int(self.lineEdit.text())
-        self.a = int(self.lineEdit_2.text())
-        self.b = int(self.lineEdit_3.text())
-        self.lineEdit_4.setText(str(find_ord_val_GF(self.a, self.p)))
-        self.lineEdit_5.setText(str(add_of_GF(*self.abp)))
-        self.lineEdit_6.setText(str(sub_of_GF(*self.abp)))
-        self.lineEdit_7.setText(str(mul_of_GF(*self.abp)))
-        self.lineEdit_8.setText(str(div_of_GF(*self.abp)))
+        p = int(self.lineEdit.text())
+        a, b = int(self.lineEdit_2.text()), int(self.lineEdit_3.text())
+        self.lineEdit_4.setText(str(find_ord_val_GF(a, p)))
+        self.lineEdit_5.setText(str(add_of_GF(a, b, p)))
+        self.lineEdit_6.setText(str(sub_of_GF(a, b, p)))
+        self.lineEdit_7.setText(str(mul_of_GF(a, b, p)))
+        self.lineEdit_8.setText(str(div_of_GF(a, b, p)))
 
     def button_cleared(self):
         self.lineEdit_4.clear()

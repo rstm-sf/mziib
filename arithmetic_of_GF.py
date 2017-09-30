@@ -30,15 +30,16 @@ def mul_inv_of_GF(a, p):
 
 
 def div_of_GF(a, b, p):
+    if b == 0:
+        return "Bad value of 'b'"
+
     b_inv = mul_inv_of_GF(b, p)
     return mul_of_GF(a, b_inv, p)
 
 
 def find_ord_val_GF(q, p):
-    if q == 1:
-        return 1
-    if p == 1 or p < q or p % q == 0:
-        return -1
+    if p < 2 or p % q == 0:
+        return "Bad value of 'p'"
 
     t = q % p
     my_ord = 1
