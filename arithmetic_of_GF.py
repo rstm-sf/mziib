@@ -1,3 +1,6 @@
+import math
+
+
 def add_of_GF(a, b, p):
     return (a + b) % p
 
@@ -49,6 +52,18 @@ def find_ord_val_GF(q, p):
         my_ord += 1
 
     return my_ord
+
+
+def is_prime_number(n):
+    '''Checks the number on prime
+
+    Use the trial division.
+    '''
+    for i in range(2, math.ceil(math.sqrt(n)), 1):
+        if n % i == 0:
+            return False
+
+    return True
 
 
 def task_find_ord():
