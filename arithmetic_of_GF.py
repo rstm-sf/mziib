@@ -66,6 +66,44 @@ def is_prime_number(n):
     return True
 
 
+def function_Euler(n):
+    '''Euler’ totient function
+    '''
+    value = 0
+    for i in range(1, n, 1):
+        d, _, _ = xgcd(n, i)
+        if d == 1:
+            value += 1
+
+    return value
+
+
+def is_witness_prime_number(a, n):
+    if n % 2 == 0:
+        return "'n' not odd"
+
+    n_1 = n - 1
+    s, t = 1, n_1 >> 1
+    while t % 2 == 0:
+        s += 1
+        t = t >> 1
+
+    b = math.pow(a, t) % n
+    if b == 1 or b == n_1:
+        return True
+
+    i = 1
+    while i < s:
+        b = mul_of_GF(b, b, n)
+        if b == 1:
+            return False
+        elif b == n_1:
+            return True
+        i += 1
+
+    return False
+
+
 def task_find_ord():
     print('Введите числа: q - любое число конечного поля F(p), p - порядок поля.')
 
