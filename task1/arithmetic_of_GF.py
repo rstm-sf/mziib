@@ -94,11 +94,11 @@ def find_s_and_t_for_witness(n):
     return s, t
 
 
-def is_witness_prime_number(a, n, s=0, t=0):
+def is_witness_prime_number(a, n, s=None, t=None):
     if n % 2 == 0:
         return "'n' not odd"
 
-    if s == 0 or t == 0:
+    if t is None:
         s, t = find_s_and_t_for_witness(n)
 
     n_1 = n - 1
@@ -107,14 +107,15 @@ def is_witness_prime_number(a, n, s=0, t=0):
     if b == 1 or b == n_1:
         return True
 
-    i = 1
+    i, b2 = 1, mul_of_GF(b, b, n)
+    b = b2
     while i < s:
-        b = mul_of_GF(b, b, n)
         if b == 1:
             return False
         elif b == n_1:
             return True
         i += 1
+        b = mul_of_GF(b, b2, n)
 
     return False
 
