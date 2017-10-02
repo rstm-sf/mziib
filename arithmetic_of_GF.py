@@ -1,4 +1,6 @@
 import math
+import numpy as np
+import random
 
 
 def add_of_GF(a, b, p):
@@ -78,15 +80,28 @@ def function_Euler(n):
     return value
 
 
-def is_witness_prime_number(a, n):
+def find_s_and_t_for_witness(n):
+    '''Find s and t for n - 1 = t*2**s
+    '''
     if n % 2 == 0:
         return "'n' not odd"
 
-    n_1 = n - 1
-    s, t = 1, n_1 >> 1
+    s, t = 1, (n - 1) >> 1
     while t % 2 == 0:
         s += 1
         t = t >> 1
+
+    return s, t
+
+
+def is_witness_prime_number(a, n, s=0, t=0):
+    if n % 2 == 0:
+        return "'n' not odd"
+
+    if s == 0 or t == 0:
+        s, t = find_s_and_t_for_witness(n)
+
+    n_1 = n - 1
 
     b = math.pow(a, t) % n
     if b == 1 or b == n_1:
@@ -102,6 +117,34 @@ def is_witness_prime_number(a, n):
         i += 1
 
     return False
+
+
+def generate_set_randint(low=0, high=None, size=None):
+    if size is not None and high - low <= size:
+        return "Bad input values"
+
+    if size == 1 or size is None:
+        if high is None:
+            high = low
+            low = 0
+        gen_set = {random.randint(low, high)}
+    else:
+        gen_set = set(np.random.randint(low, high, size))
+        while len(gen_set) < size:
+            gen_set.add(random.randint(low, high))
+
+    return gen_set
+
+
+def test_Miller_Rabin(k, n):
+    s, t = find_s_and_t_for_witness(n)
+    a = generate_set_randint(2, n - 1, k)
+
+    for i in a:
+        if not is_witness_prime_number(i, n, s, t):
+            return False
+
+    return True
 
 
 def task_find_ord():
