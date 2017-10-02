@@ -137,9 +137,12 @@ def generate_set_randint(low=0, high=None, size=None):
 
 
 def test_Miller_Rabin(k, n):
-    s, t = find_s_and_t_for_witness(n)
-    a = generate_set_randint(2, n - 1, k)
+    a = generate_set_randint(2, n, k)
+    for i in a:
+        if n % i == 0:
+            return False
 
+    s, t = find_s_and_t_for_witness(n)
     for i in a:
         if not is_witness_prime_number(i, n, s, t):
             return False
