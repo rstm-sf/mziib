@@ -71,8 +71,11 @@ def is_prime_number(n):
 def function_Euler(n):
     '''Euler’ totient function
     '''
-    value = 0
-    for i in range(1, n, 1):
+    if n == 1:
+        return 1
+
+    value = 1
+    for i in range(2, n):
         d, _, _ = xgcd(n, i)
         if d == 1:
             value += 1
@@ -80,17 +83,18 @@ def function_Euler(n):
     return value
 
 
-def find_s_and_t_for_witness(n):
-    '''Find s and t for n - 1 = t*2**s
-    '''
-    if n % 2 == 0:
-        return "'n' not odd"
-
-    s, t = 1, (n - 1) >> 1
+def find_bin_and_remainder_for_number(n):
+    s, t = 0, n
     while t % 2 == 0:
         s += 1
         t = t >> 1
+    return s, t
 
+
+def find_s_and_t_for_witness(n):
+    '''Find s and t for n - 1 = t*2**s
+    '''
+    s, t = find_bin_and_remainder_for_number(n - 1)
     return s, t
 
 
