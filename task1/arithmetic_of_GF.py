@@ -61,7 +61,7 @@ def is_prime_number(n):
 
     Use the trial division.
     '''
-    for i in range(2, math.ceil(math.sqrt(n)), 1):
+    for i in range(2, math.ceil(math.sqrt(n))):
         if n % i == 0:
             return False
 
@@ -74,13 +74,19 @@ def function_Euler(n):
     if n == 1:
         return 1
 
-    value = 1
-    for i in range(2, n):
-        d, _, _ = xgcd(n, i)
-        if d == 1:
-            value += 1
+    value, i = n, 2
+    while i * i <= n:
+        if n % i == 0:
+            i_inv = 1. / i
+            n *= i_inv
+            while n % i == 0:
+                n *= i_inv
+            value *= 1 - i_inv
+        i += 1
+    if n > 1:
+        value *= 1 - 1. / n
 
-    return value
+    return int(value)
 
 
 def find_bin_and_remainder_for_number(n):
@@ -124,7 +130,7 @@ def is_witness_prime_number(a, n, s=None, t=None):
     return False
 
 
-def generate_set_randint(low=0, high=None, size=None):
+def generate_set_randint(low, high=None, size=None):
     if size is not None and high - low <= size:
         return "Bad input values"
 
