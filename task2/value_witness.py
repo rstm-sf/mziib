@@ -33,4 +33,67 @@ def find_number_witness_pq(p, q):
     return nw
 
 
-print(find_number_witness_pq(11, 31))
+def list_sieve_of_Atkin(n):
+    if 1 < n < 6:
+        if n == 2:
+            return [2]
+        elif n == 5:
+            return [2, 3, 5]
+        else:
+            return [2, 3]
+
+    sqrt_n = int(math.sqrt(n))
+    is_prime = [False for i in range(n + 1)]
+    is_prime[2], is_prime[3] = True, True
+
+    # Предположительно простые - это целые с нечетным числом
+    # представлений в данных квадратных формах.
+    # x2 и y2 - это квадраты i и j (оптимизация).
+    x2 = 0
+    for i in range(1, sqrt_n + 1):
+        x2 += 2 * i - 1
+        y2 = 0
+        for j in range(1, sqrt_n + 1):
+            y2 += 2 * j - 1
+            k = 4 * x2 + y2
+            if k <= n and (k % 12 == 1 or k % 12 == 5):
+                is_prime[k] = not is_prime[k]
+            # n = 3 * x2 + y2
+            k -= x2
+            if k <= n and k % 12 == 7:
+                is_prime[k] = not is_prime[k]
+            # k = 3 * x2 - y2
+            k -= 2 * y2
+            if i > j and k <= n and k % 12 == 11:
+                is_prime[k] = not is_prime[k]
+
+    # Отсеиваем квадраты простых чисел в интервале [5, sqrt(n)].
+    # (основной этап не может их отсеять)
+    for i in range(5, sqrt_n + 1):
+        if is_prime[i]:
+            k = i * i
+            for j in range(k, n + 1, k):
+                is_prime[j] = False
+
+    primes = [2, 3, 5]
+    primes.extend(
+        i for i in range(6, n + 1)
+        if is_prime[i] and i % 3 != 0 and i % 5 != 0
+    )
+
+    return primes
+
+
+def find_list_pairs_primes(n):
+    primes = list_sieve_of_Atkin(n // 2)
+    len_primes, pairs = len(primes), list()
+
+    while len_primes > 1:
+        p, len_primes = primes.pop(), len_primes - 1
+        for i in primes:
+            if i * p <= n:
+                pairs.append({i, p})
+            else:
+                break
+
+    return pairs
