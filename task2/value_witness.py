@@ -1,6 +1,7 @@
 import sys
 sys.path.append("../task1/")
 from arithmetic_of_GF import *
+import time
 
 
 def find_set_division(n):
@@ -92,8 +93,39 @@ def find_list_pairs_primes(n):
         p, len_primes = primes.pop(), len_primes - 1
         for i in primes:
             if i * p <= n:
-                pairs.append({i, p})
+                pairs.append([i, p])
             else:
                 break
 
     return pairs
+
+
+def find_ratio_for_number(n):
+    pairs = find_list_pairs_primes(n)
+    len_pairs, i = len(pairs), 0
+    ratios_n = np.empty(len_pairs)
+    for pq in pairs:
+        p, q = pq[0], pq[1]
+        nw = find_number_witness_pq(p, q)
+        ratios_n[i] = nw / (p * q)
+        i += 1
+
+    return np.sum(ratios_n) / len_pairs
+
+
+def main():
+    print('Введите число: n =', end=' ')
+    n = int(input())
+
+    start_time = time.time()
+    ratio = find_ratio_for_number(n)
+    end_time = time.time()
+
+    print('=' * 80)
+    print("Среднее соотношение:\t{}".format(ratio))
+    print("Время расчета (c):  \t{:.6f}".format(end_time - start_time))
+    print('=' * 80)
+
+
+if __name__ == '__main__':
+    main()
