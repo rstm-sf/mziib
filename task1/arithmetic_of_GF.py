@@ -91,7 +91,7 @@ def function_Euler(n):
 
 def find_bin_and_remainder_for_number(n):
     s, t = 0, n
-    while t % 2 == 0:
+    while t & 1 == 0:
         s += 1
         t = t >> 1
     return s, t
@@ -105,7 +105,7 @@ def find_s_and_t_for_witness(n):
 
 
 def is_witness_prime_number(a, n, s=None, t=None):
-    if n % 2 == 0:
+    if n & 1 == 0:
         return "'n' not odd"
 
     if t is None:

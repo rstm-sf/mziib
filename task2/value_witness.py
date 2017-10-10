@@ -5,8 +5,25 @@ import time
 
 
 def find_set_division(n):
-    div_set = {i for i in range(2, n) if n % i == 0}
-    return div_set | {1, n}
+    if n == 1 or n == 2:
+        return {1, n}
+
+    p, div_list_pow2, div_set = 1, [1], {n}
+    while n & 1 == 0:
+        n, p = n >> 1, p << 1
+        div_set.add(n)
+        div_list_pow2.append(p)
+
+    if n == 1:
+        return div_set | set(div_list_pow2)
+
+    div_list = [i for i in range(1, n, 2) if n % i == 0]
+
+    for i in div_list_pow2:
+        for j in div_list:
+            div_set.add(i * j)
+
+    return div_set
 
 
 def find_bin_of_number(n):
