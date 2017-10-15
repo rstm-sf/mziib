@@ -3,6 +3,10 @@ import numpy as np
 import random
 
 
+def is_even(n):
+    return (n & 1) == 0
+
+
 def add_of_GF(a, b, p):
     return (a + b) % p
 
@@ -97,7 +101,7 @@ def function_Euler(n):
 
 def find_bin_and_remainder_for_number(n):
     s, t = 0, n
-    while t & 1 == 0:
+    while is_even(t):
         s += 1
         t = t >> 1
     return s, t
@@ -111,7 +115,7 @@ def find_s_and_t_for_witness(n):
 
 
 def is_witness_prime_number(a, n, s=None, t=None):
-    if n & 1 == 0:
+    if is_even(n):
         return "'n' not odd"
 
     if t is None:
@@ -154,7 +158,7 @@ def generate_set_randint(low, high=None, size=None):
 
 
 def test_Miller_Rabin(k, n):
-    if n < 2 or n & 1 == 0:
+    if n < 2 or is_even(n):
         return False
 
     a = generate_set_randint(2, n, k)

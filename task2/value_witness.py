@@ -4,74 +4,6 @@ from arithmetic_of_GF import *
 import time
 
 
-def function_f_for_pollard(x, n):
-    if x == 0 or x == n:
-        return 1
-    f = mul_of_GF(x, x, n)
-    f += 1
-    return f if f < n else 0
-
-
-def pollard_rho(n, iterations_count=100000):
-    r = random.randint(1, n)
-    x0, x1 = r, function_f_for_pollard(r, n)
-    g, i = gcd(abs(x1 - x0), n), 0
-
-    while (g == 1 or g == n) and i < iterations_count:
-        x0 = function_f_for_pollard(x0, n)
-        x1 = function_f_for_pollard(function_f_for_pollard(x1, n), n)
-        g, i = gcd(abs(x1 - x0), n), i + 1
-
-    return g
-
-
-def find_set_division(n):
-    if n == 1 or n == 2:
-        return {1, n}
-
-    p, div_list_pow2, div_set = 1, [1], {n}
-    while n & 1 == 0:
-        n, p = n >> 1, p << 1
-        div_set.add(n)
-        div_list_pow2.append(p)
-
-    if n == 1:
-        return div_set | set(div_list_pow2)
-
-    div_list = [i for i in range(1, n, 2) if n % i == 0]
-
-    for i in div_list_pow2:
-        for j in div_list:
-            div_set.add(i * j)
-
-    return div_set
-
-
-def find_bin_of_number(n):
-    bin_n, _ = find_bin_and_remainder_for_number(n)
-    return bin_n
-
-
-def find_number_witness_pq(p, q):
-    Dp, Dq = find_set_division(p - 1), find_set_division(q - 1)
-    D = Dp & Dq
-
-    bins_D_dict = {d: find_bin_of_number(d) for d in D}
-    bins_D_set = set(bins_D_dict.values())
-    Di = {i: set() for i in bins_D_set}
-    for d in D:
-        Di.get(bins_D_dict[d]).add(d)
-
-    nw = 0
-    for i in bins_D_set:
-        s_i = 0
-        for d in Di.get(i):
-            s_i += function_Euler(d)
-        nw += s_i * s_i
-
-    return nw
-
-
 def list_sieve_of_Atkin(n):
     if 1 < n < 6:
         if n == 2:
@@ -121,6 +53,73 @@ def list_sieve_of_Atkin(n):
     )
 
     return primes
+
+
+primes_frozenset = frozenset(list_sieve_of_Atkin(int(1e4)))
+
+
+def function_f_for_pollard(x, n):
+    return 1 if x == 0 or x == n else (x * x + 1) % n
+
+
+def pollard_rho(n, iterations_count=100000):
+    r = random.randint(1, n)
+    x0, x1 = r, function_f_for_pollard(r, n)
+    g, i = gcd(abs(x1 - x0), n), 0
+
+    while (g == 1 or g == n) and i < iterations_count:
+        x0 = function_f_for_pollard(x0, n)
+        x1 = function_f_for_pollard(function_f_for_pollard(x1, n), n)
+        g, i = gcd(abs(x1 - x0), n), i + 1
+
+    return g
+
+
+def find_set_division(n):
+    if n == 1 or n == 2:
+        return {1, n}
+
+    p, div_list_pow2, div_set = 1, [1], {n}
+    while is_even(n):
+        n, p = n >> 1, p << 1
+        div_set.add(n)
+        div_list_pow2.append(p)
+
+    if n == 1 or n is primes_frozenset:
+        return div_set | set(div_list_pow2)
+
+    div_list = [i for i in range(1, n, 2) if n % i == 0]
+
+    for i in div_list_pow2:
+        for j in div_list:
+            div_set.add(i * j)
+
+    return div_set
+
+
+def find_bin_of_number(n):
+    bin_n, _ = find_bin_and_remainder_for_number(n)
+    return bin_n
+
+
+def find_number_witness_pq(p, q):
+    n1, n2 = (q - 1, p - 1) if p > q else (p - 1, q - 1)
+    D = {i for i in find_set_division(n1) if n2 % i == 0}
+
+    bins_D_dict = {d: find_bin_of_number(d) for d in D}
+    bins_D_set = set(bins_D_dict.values())
+    Di = {i: set() for i in bins_D_set}
+    for d in D:
+        Di.get(bins_D_dict[d]).add(d)
+
+    nw = 0
+    for i in bins_D_set:
+        s_i = 0
+        for d in Di.get(i):
+            s_i += function_Euler(d)
+        nw += s_i * s_i
+
+    return nw
 
 
 def find_list_pairs_primes(n):
