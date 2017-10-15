@@ -4,6 +4,27 @@ from arithmetic_of_GF import *
 import time
 
 
+def function_f_for_pollard(x, n):
+    if x == 0 or x == n:
+        return 1
+    f = mul_of_GF(x, x, n)
+    f += 1
+    return f if f < n else 0
+
+
+def pollard_rho(n, iterations_count=100000):
+    r = random.randint(1, n)
+    x0, x1 = r, function_f_for_pollard(r, n)
+    g, i = gcd(abs(x1 - x0), n), 0
+
+    while (g == 1 or g == n) and i < iterations_count:
+        x0 = function_f_for_pollard(x0, n)
+        x1 = function_f_for_pollard(function_f_for_pollard(x1, n), n)
+        g, i = gcd(abs(x1 - x0), n), i + 1
+
+    return g
+
+
 def find_set_division(n):
     if n == 1 or n == 2:
         return {1, n}

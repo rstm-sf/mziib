@@ -15,6 +15,12 @@ def sub_of_GF(a, b, p):
     return (a - b) % p
 
 
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+
 def xgcd(a, b):
     '''Iterative Extended Euclidean algorithm
     '''
@@ -148,9 +154,12 @@ def generate_set_randint(low, high=None, size=None):
 
 
 def test_Miller_Rabin(k, n):
+    if n < 2 or n & 1 == 0:
+        return False
+
     a = generate_set_randint(2, n, k)
     for i in a:
-        if n % i == 0:
+        if gcd(i, n) != 1:
             return False
 
     s, t = find_s_and_t_for_witness(n)
