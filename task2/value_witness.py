@@ -2,6 +2,7 @@ import sys
 sys.path.append("../task1/")
 from arithmetic_of_GF import *
 import time
+import multiprocessing as mp
 
 
 def list_sieve_of_Atkin(n):
@@ -137,17 +138,20 @@ def find_list_pairs_primes(n):
     return pairs
 
 
+def find_ratio_for_pair(pq):
+    p, q = pq[0], pq[1]
+    return find_number_witness_pq(p, q) / (p * q)
+
+
 def find_ratio_for_number(n):
     pairs = find_list_pairs_primes(n)
-    len_pairs, i = len(pairs), 0
-    ratios_n = np.empty(len_pairs)
-    for pq in pairs:
-        p, q = pq[0], pq[1]
-        nw = find_number_witness_pq(p, q)
-        ratios_n[i] = nw / (p * q)
-        i += 1
-
-    return np.sum(ratios_n) / len_pairs
+    print('Число пар: {}'.format(len(pairs)))
+    if n > 100000:
+        pool = mp.Pool()
+        result = [pool.map_async(find_ratio_for_pair, pairs)]
+        return np.sum([p.get() for p in result]) / len(pairs)
+    else:
+        return np.sum(find_ratio_for_pair(pq) for pq in pairs) / len(pairs)
 
 
 def main():

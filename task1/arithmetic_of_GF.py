@@ -81,7 +81,7 @@ def is_prime_number(n):
 def function_Euler(n):
     '''Euler’ totient function
     '''
-    if n == 1:
+    if n == 1 or n == 2:
         return 1
 
     value, i = n, 2
