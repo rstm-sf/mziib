@@ -1,9 +1,10 @@
-import sys
-sys.path.append("../task1/")
-from arithmetic_of_GF import *
-import time
 import multiprocessing as mp
 import matplotlib.pyplot as plt
+import time
+if __name__ == '__main__':
+    from arithmetic_of_GF import *
+else:
+    from task2.arithmetic_of_GF import *
 
 
 def function_f_for_pollard(x, n):
@@ -125,10 +126,10 @@ def calc_for_one_number():
 
 def init_n_list_and_filename_pdf():
     print(
-        "Выберете вариант промежутока для графика чисел N\n",
+        "Выберете вариант промежутка для графика чисел N\n",
         "1: N = [1e+2, 1e+4];\n",
         "2: N = [1e+4, 1e+6];\n",
-        "3: N = [1e+6, 1e+7];"
+        "3: N = [1e+6, 1e+7]."
     )
     print("Вариант: ", end='')
     x_mod = int(input())
