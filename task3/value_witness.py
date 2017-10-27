@@ -1,10 +1,7 @@
 import multiprocessing as mp
 import matplotlib.pyplot as plt
 import time
-if __name__ == '__main__':
-    from arithmetic_of_GF import *
-else:
-    from task2.arithmetic_of_GF import *
+from arithmetic_of_GF import *
 
 
 def function_f_for_pollard(x, n):

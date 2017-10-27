@@ -54,7 +54,7 @@ def list_sieve_of_Atkin(n):
     return primes
 
 
-n_for_Atkin = int(1e7)
+n_for_Atkin = int(1e6)
 print("Генерация решета Аткина до N={}...".format(n_for_Atkin))
 primes_tuple = tuple(list_sieve_of_Atkin(n_for_Atkin))
 primes_frozenset = frozenset(primes_tuple)
