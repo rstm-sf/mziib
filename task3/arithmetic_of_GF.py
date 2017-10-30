@@ -8,7 +8,7 @@ import time
 n_for_Atkin = int(1e7)
 print("Генерация простых чисел до N={}...".format(n_for_Atkin))
 st = time.time()
-primes_frozenset = frozenset(psnp.primes(n_for_Atkin))
+primes_frozenset = frozenset(psnp.primes(2, n_for_Atkin))
 et = time.time()
 print("Простые числа сгенерированы за {}(с.)".format(et - st))
 

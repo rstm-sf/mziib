@@ -52,7 +52,7 @@ def find_number_witness_pq(p, q):
 
 
 def find_list_pairs_primes(n):
-    primes, pairs = psnp.primes(n // 2).tolist(), list()
+    primes, pairs = psnp.primes(2, n // 2).tolist(), list()
 
     while len(primes) > 1:
         p = primes.pop()
