@@ -1,4 +1,3 @@
-import time
 if __name__ == '__main__':
     from arithmetic_of_GF import *
     from value_witness import *
@@ -9,7 +8,7 @@ from collections import deque
 
 
 def find_list_pqr_primes(n):
-    primes = tuple(get_list_primes(n // (2 * 3)))
+    primes = tuple(psnp.primes(n // (2 * 3)).tolist())
     i_start, j_start, k_start = 0, 1, len(primes) - 1
 
     list_p, qr, index_end = list(), deque(), 0
@@ -97,13 +96,14 @@ def main():
     start_time = time.time()
 
     list_p, list_qr = find_list_pqr_primes(n)
+    end_time_pqr = time.time()
+    print('find list pqr, time {:.3f}.'.format(end_time_pqr -start_time))
     start_time_dict = time.time()
-    primes = get_list_primes(n // (2 * 3))
-    div_dict = dict.fromkeys([i - 1 for i in primes])
-    div_dict = {(i - 1): find_set_division(i - 1) for i in primes}
+    primes = (psnp.primes(n // (2 * 3)) - 1).tolist()
+    div_dict = {i: find_set_division(i) for i in primes}
     primes.clear()
     end_time_dict = time.time()
-    print('div_dict init with time {:.3f}.'.format(end_time_dict - start_time_dict))
+    print('div_dict init, time {:.3f}.'.format(end_time_dict -start_time_dict))
     ratios, n = list(), 0
 
     for pi in list_p:
@@ -116,7 +116,7 @@ def main():
     if n != 0:
         ratio = np.sum(ratios, dtype=float) / n
         end_time = time.time()
-        print('{:.3f}.'.format(end_time - start_time))
+        print('Время расчета {:.3f}(с.).'.format(end_time - start_time))
         print(ratio)
     else:
         print("Количество n=pqr равно 0!")

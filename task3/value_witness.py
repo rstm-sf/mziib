@@ -4,35 +4,6 @@ import time
 from arithmetic_of_GF import *
 
 
-def function_f_for_pollard(x, n):
-    return 1 if x == 0 or x == n else (x * x + 1) % n
-
-
-def get_list_primes(n):
-    list_primes = list()
-    lp_append = list_primes.append
-    for p in primes_tuple:
-        if p <= n:
-            lp_append(p)
-        else:
-            break
-
-    return list_primes
-
-
-def pollard_rho(n, iterations_count=100000):
-    r = random.randint(1, n)
-    x0, x1 = r, function_f_for_pollard(r, n)
-    g, i = gcd(abs(x1 - x0), n), 0
-
-    while (g == 1 or g == n) and i < iterations_count:
-        x0 = function_f_for_pollard(x0, n)
-        x1 = function_f_for_pollard(function_f_for_pollard(x1, n), n)
-        g, i = gcd(abs(x1 - x0), n), i + 1
-
-    return g
-
-
 def find_set_division(n):
     div_set = {1, n}
 
@@ -79,7 +50,7 @@ def find_number_witness_pq(p, q):
 
 
 def find_list_pairs_primes(n):
-    primes, pairs = get_list_primes(n // 2), list()
+    primes, pairs = psnp.primes(n // 2).tolist(), list()
 
     while len(primes) > 1:
         p = primes.pop()
