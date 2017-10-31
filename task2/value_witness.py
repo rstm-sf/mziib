@@ -1,9 +1,9 @@
 import multiprocessing as mp
 import matplotlib.pyplot as plt
 if __name__ == '__main__':
-    from arithmetic_of_GF import *
-else:
-    from task2.arithmetic_of_GF import *
+    import sys
+    sys.path.append("../")
+from task1.arithmetic_of_GF import *
 
 
 def find_set_division(n):
@@ -31,36 +31,51 @@ def find_bin_of_number(n):
     return bin_n
 
 
+def find_D_dict_bin_set(Di):
+    set_bin, Di_dict = set(), dict()
+    for d in Di:
+        bin_d = find_bin_of_number(d)
+        if bin_d in set_bin:
+            Di_dict.get(bin_d).add(d)
+        else:
+            Di_dict.update({bin_d: {d}})
+            set_bin.add(bin_d)
+
+    return Di_dict
+
+
 def find_number_witness_pq(p, q):
     n1, n2 = (q - 1, p - 1) if p > q else (p - 1, q - 1)
     D = {i for i in find_set_division(n1) if n2 % i == 0}
 
-    bins_D_dict = {d: find_bin_of_number(d) for d in D}
-    bins_D_set = set(bins_D_dict.values())
-    Di = {i: set() for i in bins_D_set}
-    for d in D:
-        Di.get(bins_D_dict[d]).add(d)
+    Di_dict = find_D_dict_bin_set(D)
 
     nw = 0
-    for i in bins_D_set:
+    for set_d in Di_dict.values():
         s_i = 0
-        for d in Di.get(i):
+        for d in set_d:
             s_i += function_Euler(d)
         nw += s_i * s_i
 
     return nw
 
 
-def find_list_pairs_primes(n):
-    primes, pairs = psnp.primes(2, n // 2).tolist(), list()
+def find_list_pairs_primes(n, primes=None):
+    if primes is None:
+        primes = tuple(psnp.primes(2, n // 2).tolist())
+        return find_list_pairs_primes(n, primes)
+    pairs, start, end = list(), 0, len(primes) - 1
 
-    while len(primes) > 1:
-        p = primes.pop()
-        for i in primes:
-            if i * p <= n:
-                pairs.append([i, p])
+    while end > start:
+        q, i = primes[end], start
+        while i < end:
+            p = primes[i]
+            if p * q <= n:
+                pairs.append([p, q])
+                i += 1
             else:
                 break
+        end -= 1
 
     return pairs
 
@@ -93,7 +108,7 @@ def calc_for_one_number():
 
     print('=' * 80)
     print("Среднее отношение:\t{}".format(ratio))
-    print("Время расчета (c):\t{:.3f}".format(end_time - start_time))
+    print("Время расчета (c.):\t{:.3f}".format(end_time - start_time))
     print('=' * 80)
 
 
@@ -128,7 +143,7 @@ def find_ratios_for_n_list(n_list):
     start_time = time.time()
     ratios = [find_ratio_for_number(i) for i in n_list]
     end_time = time.time()
-    print("Время расчета (c):  \t{:.3f}".format(end_time - start_time))
+    print("Время расчета (c.):  \t{:.3f}".format(end_time - start_time))
 
     return ratios
 

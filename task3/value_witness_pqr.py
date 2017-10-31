@@ -1,9 +1,8 @@
 if __name__ == '__main__':
-    from arithmetic_of_GF import *
-    from value_witness import *
-else:
-    from task3.arithmetic_of_GF import *
-    from task3.value_witness import *
+    import sys
+    sys.path.append("../")
+from task1.arithmetic_of_GF import *
+from task2.value_witness import *
 
 
 div_dict = dict()
@@ -20,38 +19,13 @@ def find_list_pqr_primes(n):
         max_qr = n // p
         while primes[j_start] * primes[k_start] > max_qr:
             k_start -= 1
-        k = k_start
-        qr = list()
 
-        while k > j_start:
-            r, j = primes[k], j_start
-            while j < k:
-                q = primes[j]
-                if q * r <= max_qr:
-                    qr.append([q, r])
-                    j += 1
-                else:
-                    break
-            k -= 1
-
-        i_start, j_start = j_start, j_start + 1
+        qr = find_list_pairs_primes(max_qr, primes[j_start:k_start + 1])
         if qr:
             list_pqr_append([p, qr])
+        i_start, j_start = j_start, j_start + 1
 
     return list_pqr
-
-
-def find_D_dict_bin_set(Di):
-    set_bin, Di_dict = set(), dict()
-    for d in Di:
-        bin_d = find_bin_of_number(d)
-        if bin_d in set_bin:
-            Di_dict.get(bin_d).add(d)
-        else:
-            Di_dict.update({bin_d: {d}})
-            set_bin.add(bin_d)
-
-    return Di_dict
 
 
 def find_E(D_dict, key_iter):
@@ -96,13 +70,13 @@ def find_ratio_for_pqr(p, qr):
 
 def main():
     n = int(input(['Введите N: ']))
-    start_time = time.time()
+    st1 = time.time()
 
     list_pqr = find_list_pqr_primes(n)
-    end_time_pqr = time.time()
-    print('find list pqr, time {:.3f}.'.format(end_time_pqr - start_time))
+    et2 = time.time()
+    print('Сгенерированы тройки за время {:.3f} (с.)'.format(et2 - st1))
 
-    start_time_dict = time.time()
+    st3 = time.time()
     primes_1 = (psnp.primes(2, n // (2 * 3)) - 1).tolist()
     pool = mp.Pool()
     map_div = pool.map_async(find_set_division, primes_1)
@@ -112,9 +86,9 @@ def main():
     div_dict = {
         primes_1[i]: div for i, div in zip(range(len(primes_1)), map_div.get())
     }
-    end_time_dict = time.time()
+    et3 = time.time()
     print(
-        'div_dict init, time {:.3f}.'.format(end_time_dict - start_time_dict)
+        'Сгенерирован словарь делителей за время {:.3f} (с.)'.format(et3 - st3)
     )
 
     ratios = [
@@ -123,8 +97,8 @@ def main():
 
     if len(ratios) != 0:
         ratio = np.sum(ratios, dtype=float) / len(ratios)
-        end_time = time.time()
-        print('Время расчета {:.3f}(с.).'.format(end_time - start_time))
+        et1 = time.time()
+        print('Время расчета {:.3f} (с.)'.format(et1 - st1))
         print(ratio)
     else:
         print("Количество n=pqr равно 0!")
