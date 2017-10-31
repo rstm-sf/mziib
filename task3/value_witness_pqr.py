@@ -1,6 +1,7 @@
 if __name__ == '__main__':
     import sys
     sys.path.append("../")
+from itertools import repeat
 from task1.arithmetic_of_GF import *
 from task2.value_witness import *
 
@@ -44,7 +45,7 @@ def find_number_witness_pqr(p, q, r):
 
     Dp = {i for i in div_dict.get(p - 1) if qr_1 % i == 0}
     Dq = {i for i in div_dict.get(q - 1) if pr_1 % i == 0}
-    Dr = {i for i in div_dict.get(r - 1) if i <= pq_1 and pq_1 % i == 0}
+    Dr = {i for i in div_dict.get(r - 1) if pq_1 % i == 0}
 
     Dp_dict = find_D_dict_bin_set(Dp)
     Dq_dict = find_D_dict_bin_set(Dq)
@@ -68,41 +69,79 @@ def find_ratio_for_pqr(p, qr):
     return find_number_witness_pqr(p, q, r) / (p * q * r)
 
 
-def main():
-    n = int(input(['Введите N: ']))
-    st1 = time.time()
-
+def find_ratio_for_number_pqr(n):
     list_pqr = find_list_pqr_primes(n)
-    et2 = time.time()
-    print('Сгенерированы тройки за время {:.3f} (с.)'.format(et2 - st1))
 
-    st3 = time.time()
     primes_1 = (psnp.primes(2, n // (2 * 3)) - 1).tolist()
+    if len(div_dict) < len(primes_1):
+        init_div_dict(n, primes_1)
+
+    ratios = list()
+    for pqr in list_pqr:
+        p, qr_list = pqr[0], pqr[1]
+        if len(qr_list) > 2000:
+            pool = mp.Pool()
+            result = pool.starmap_async(
+                find_ratio_for_pqr, zip(repeat(p), qr_list)
+            )
+            pool.close()
+            pool.join()
+            ratios.extend(result.get())
+        else:
+            ratios.extend([find_ratio_for_pqr(p, qr) for qr in qr_list])
+
+    if len(ratios) != 0:
+        return np.sum(ratios, dtype=float) / len(ratios)
+    else:
+        print("Количество n=pqr равно 0!")
+        return -1
+
+
+def init_div_dict(n, primes_1=None):
+    if primes_1 is None:
+        primes_1 = (psnp.primes(2, n // (2 * 3)) - 1).tolist()
     pool = mp.Pool()
     map_div = pool.map_async(find_set_division, primes_1)
     pool.close()
     pool.join()
     global div_dict
     div_dict = {
-        primes_1[i]: div for i, div in zip(range(len(primes_1)), map_div.get())
+        primes_1[i]: div
+        for i, div in zip(range(len(primes_1)), map_div.get())
     }
-    et3 = time.time()
-    print(
-        'Сгенерирован словарь делителей за время {:.3f} (с.)'.format(et3 - st3)
+
+
+def find_ratios_for_n_list_pqr(n_list):
+    st = time.time()
+    ratios = [find_ratio_for_number_pqr(i) for i in n_list]
+    et = time.time()
+    print("Время расчета для n=pqr (c.):  \t{:.3f}".format(et - st))
+
+    return ratios
+
+
+def main_pqr(*args):
+    n_list, filename_pdf = args
+    if n_list is None or filename_pdf is None:
+        return
+
+    mp.freeze_support()
+    init_div_dict(n_list[len(n_list) - 1])
+
+    f = plt.figure()
+    plt.style.use('ggplot')
+    plt.title(
+        "Cреднее отношение числа свидетелей к числу\n" +
+        "для составных чисел $n$ меньших $N$"
     )
-
-    ratios = [
-        find_ratio_for_pqr(pqr[0], qr) for pqr in list_pqr for qr in pqr[1]
-    ]
-
-    if len(ratios) != 0:
-        ratio = np.sum(ratios, dtype=float) / len(ratios)
-        et1 = time.time()
-        print('Время расчета {:.3f} (с.)'.format(et1 - st1))
-        print(ratio)
-    else:
-        print("Количество n=pqr равно 0!")
+    plt.xlabel(r'$N$')
+    plt.ylabel('Среднее отношение')
+    plt.plot(n_list, find_ratios_for_n_list(n_list), label=r'$n=pq$')
+    plt.plot(n_list, find_ratios_for_n_list_pqr(n_list), label=r'$n=pqr$')
+    plt.legend()
+    plt.show()
+    f.savefig(filename_pdf, bbox_inches='tight')
 
 
 if __name__ == '__main__':
-    main()
+    main_pqr(*init_n_list_and_filename_pdf())

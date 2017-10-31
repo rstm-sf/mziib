@@ -140,10 +140,10 @@ def init_n_list_and_filename_pdf():
 
 
 def find_ratios_for_n_list(n_list):
-    start_time = time.time()
+    st = time.time()
     ratios = [find_ratio_for_number(i) for i in n_list]
-    end_time = time.time()
-    print("Время расчета (c.):  \t{:.3f}".format(end_time - start_time))
+    et = time.time()
+    print("Время расчета для n=pq (c.):  \t{:.3f}".format(et - st))
 
     return ratios
 
@@ -152,6 +152,8 @@ def main(*args):
     n_list, filename_pdf = args
     if n_list is None or filename_pdf is None:
         return
+
+    mp.freeze_support()
 
     f = plt.figure()
     plt.style.use('ggplot')
